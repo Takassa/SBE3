@@ -1,21 +1,20 @@
-name: Deploy Pages
+name: SBE3
 
 on:
   push:
     branches:
-      - main  # Pas aan naar jouw default branch
+      - main  
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      # Stap 1: Haal de code op
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          submodules: recursive  # Vergelijkbaar met GIT_SUBMODULE_STRATEGY: recursive
+          submodules: recursive 
 
-      # Stap 2: Installeer Python en afhankelijkheden
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -25,17 +24,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          cd mdocotion && python setup.py install && cd ..
 
-      # Stap 3: Build de site
-      - name: Build site with MkDocs
+      - name: Install mdocotion
+        run: |
+          cd mdocotion
+          python setup.py install
+          cd ..
+
+      - name: Build documentation
         run: mkdocs build --site-dir public
 
-      # Stap 4: Deploy naar GitHub Pages met een alternatieve actie
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.0.0
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages  # De branch waar de site wordt gedeployed
-          folder: ./public  # De map waarin je site is gegenereerd
-          token: ${{ secrets.GITHUB_TOKEN }}  # Gebruik de GitHub token om te deployen
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
