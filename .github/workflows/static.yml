@@ -1,9 +1,9 @@
-name: Deploy Pages
+NAME: Deploy Pages
 
 on:
   push:
     branches:
-      - main # Pas aan naar jouw default branch
+      - main  # Pas aan naar jouw default branch
 
 jobs:
   deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          submodules: recursive # Vergelijkbaar met GIT_SUBMODULE_STRATEGY: recursive
+          submodules: recursive  # Vergelijkbaar met GIT_SUBMODULE_STRATEGY: recursive
 
       # Stap 2: Installeer Python en afhankelijkheden
       - name: Set up Python
@@ -31,10 +31,11 @@ jobs:
       - name: Build site with MkDocs
         run: mkdocs build --site-dir public
 
-      # Stap 4: Deploy naar GitHub Pages
+      # Stap 4: Deploy naar GitHub Pages met een alternatieve actie
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4.0.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          branch: gh-pages  # De branch waar de site wordt gedeployed
+          folder: ./public  # De map waarin je site is gegenereerd
+          token: ${{ secrets.GITHUB_TOKEN }}  # Gebruik de GitHub token om te deployen
 
