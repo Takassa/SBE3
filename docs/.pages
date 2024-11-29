@@ -2,5 +2,5 @@ nav:
     - Home: index.md
     - HackTheBox:
       - Easy: 
-        - Test: test.md
+        - Chemistry: htb-chemistry.md
 
